@@ -1,4 +1,7 @@
 import { Client, Databases, Users } from "node-appwrite";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const appwriteConfig = {
   endpoint: process.env.APPWRITE_ENDPOINT,
@@ -7,12 +10,12 @@ const appwriteConfig = {
 };
 
 const appwriteDatabases = {
-    database: process.env.APPWRITE_DATABASE_ID,
-    users: process.env.APPWRITE_USERS_COLLECTION_ID,
-    confessions: process.env.APPWRITE_CONFESSIONS_COLLECTION_ID,
-    comments: process.env.APPWRITE_COMMENTS_COLLECTION_ID,
-    likes: process.env.APPWRITE_LIKES_COLLECTION_ID
-}
+  database: process.env.APPWRITE_DATABASE_ID,
+  users: process.env.APPWRITE_USERS_COLLECTION_ID,
+  confessions: process.env.APPWRITE_CONFESSIONS_COLLECTION_ID,
+  comments: process.env.APPWRITE_COMMENTS_COLLECTION_ID,
+  likes: process.env.APPWRITE_LIKES_COLLECTION_ID,
+};
 
 const client = new Client();
 

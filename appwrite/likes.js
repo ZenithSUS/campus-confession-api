@@ -1,12 +1,13 @@
 import { database, appwriteDatabases } from "./index.js";
-import { ID, Permission, Query, Role } from "node-appwrite";
+import { Permission, ID, Role, Query } from "node-appwrite";
 
-export class Comment {
+export class Like {
+  // create like
   async create(data) {
     try {
       return await database.createDocument(
         appwriteDatabases.database,
-        appwriteDatabases.comments,
+        appwriteDatabases.likes,
         ID.unique(),
         data,
         [Permission.read(Role.any()), Permission.write(Role.user(data.user))]
@@ -16,16 +17,17 @@ export class Comment {
     }
   }
 
-  async getComments() {
+  // get likes by confession
+  async getLikes() {
     try {
-      let allComments = [];
+      let allLikes = [];
       let offset = 0;
       const limit = 100;
 
       while (true) {
         const { documents } = await database.listDocuments(
-          appwriteDatabases.documents,
-          appwriteDatabases.comments,
+          appwriteDatabases.database,
+          appwriteDatabases.likes,
           [Query.limit(limit), Query.offset(offset)]
         );
 
@@ -33,21 +35,22 @@ export class Comment {
           break;
         }
 
-        allComments = [...allComments, ...documents];
+        allLikes = [...allLikes, ...documents];
         offset += limit;
       }
 
-      return allComments;
+      return allLikes;
     } catch (error) {
       console.log(error);
     }
   }
 
-  async getCommentById(id) {
+  // get like by id
+  async getLikeById(id) {
     try {
       return await database.getDocument(
         appwriteDatabases.database,
-        appwriteDatabases.comments,
+        appwriteDatabases.likes,
         id
       );
     } catch (error) {
@@ -55,11 +58,25 @@ export class Comment {
     }
   }
 
+  // delete like
   async delete(id) {
     try {
       return await database.deleteDocument(
         appwriteDatabases.database,
-        appwriteDatabases.comments,
+        appwriteDatabases.likes,
+        id
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // update like
+  async update(id) {
+    try {
+      return await database.updateDocument(
+        appwriteDatabases.database,
+        appwriteDatabases.likes,
         id
       );
     } catch (error) {

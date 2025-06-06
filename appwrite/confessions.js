@@ -1,7 +1,8 @@
 import { database, appwriteDatabases } from "./index.js";
 import { ID, Permission, Query, Role } from "node-appwrite";
+import { Like } from "./likes.js";
 
-export class Confession {
+export class Confession extends Like {
 
   // create confession
   async create(data) {
@@ -20,17 +21,20 @@ export class Confession {
 
   // get confession
   async getConfessions() {
+
     try {
       let allConfession = [];
       let offset = 0;
       const limit = 100;
 
+      
       while (true) {
         const { documents } = await database.listDocuments(
           appwriteDatabases.database,
           appwriteDatabases.confessions,
           [Query.limit(limit), Query.offset(offset)]
         );
+
 
         if (documents.length === 0) {
           break;
@@ -39,6 +43,11 @@ export class Confession {
         allConfession = [...allConfession, ...documents];
         offset += limit;
       }
+
+      const likes = await this.getLikes();
+      allConfession.map((confession) => {
+        confession.likes = likes.filter((like) => like.confessionId === confession.$id).length;
+      });
 
       return allConfession;
     } catch (error) {
