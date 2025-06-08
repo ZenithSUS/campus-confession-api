@@ -21,6 +21,11 @@ app.use(
   })
 );
 
+// Make favicon available
+app.get("/favicon.ico", (req, res) => {
+  res.status(204);
+});
+
 // parse requests of content-type - application/json
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
