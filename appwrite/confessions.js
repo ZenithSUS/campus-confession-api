@@ -65,11 +65,25 @@ export class Confession {
   // get confession by id
   async getConfessionById(id) {
     try {
-      return await database.getDocument(
+      const confession = await database.getDocument(
         appwriteDatabases.database,
         appwriteDatabases.confessions,
         id
       );
+
+      const likes = new Like();
+      const comments = new Comment();
+
+      confession.likes =
+        (await likes.getLikes()).filter(
+          (like) => like.confessionId === confession.$id
+        ).length || 0;
+      confession.comments =
+        (await comments.getComments()).filter(
+          (comment) => comment.confession === confession.$id
+        ).length || 0;
+
+      return confession;
     } catch (error) {
       console.log(error);
     }
