@@ -2,19 +2,26 @@ import express from "express";
 const router = express.Router();
 
 import { CommentController } from "../controllers/comment.js";
-const commentController = new CommentController();
 
-// POST Method
-router.post("/", commentController.useCreateComment.bind(commentController));
+class CommentRouter {
+  constructor() {
+    this.commentController = new CommentController();
+  }
 
-// GET Method
-router.get("/", commentController.useGetComments.bind(commentController));
-router.get("/:id", commentController.useGetCommentById.bind(commentController));
+  routes() {
+    // POST Method
+    router.post("/", this.commentController.useCreateComment.bind(this.commentController));
 
-// DELETE Method
-router.delete(
-  "/:id",
-  commentController.useDeleteComment.bind(commentController)
-);
+    // GET Method
+    router.get("/", this.commentController.getComments.bind(this.commentController));
+    router.get("/:id", this.commentController.useGetCommentById.bind(this.commentController));
 
-export default router;
+    // DELETE Method
+    router.delete("/:id", this.commentController.useDeleteComment.bind(this.commentController));
+
+
+    return router;
+  }
+}
+
+export default new CommentRouter();

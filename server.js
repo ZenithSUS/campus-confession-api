@@ -7,6 +7,7 @@ import { notFound } from "./middleware/not-found.js";
 import { error } from "./middleware/error.js";
 import confessionRouter from "./routes/confession.js";
 import commentRouter from "./routes/comments.js";
+import likeRouter from "./routes/likes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,8 +29,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(logger);
 
 // routes
-app.use("/api/confessions", confessionRouter);
-app.use("/api/comments", commentRouter);
+app.use("/api/confessions", confessionRouter.routes());
+app.use("/api/comments", commentRouter.routes());
+app.use("/api/likes", likeRouter.routes());
 
 // Error Handling Middleware
 app.use(notFound);

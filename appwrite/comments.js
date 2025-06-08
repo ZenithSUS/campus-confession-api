@@ -24,9 +24,9 @@ export class Comment {
 
       while (true) {
         const { documents } = await database.listDocuments(
-          appwriteDatabases.documents,
+          appwriteDatabases.database,
           appwriteDatabases.comments,
-          [Query.limit(limit), Query.offset(offset)]
+          [Query.limit(limit), Query.offset(offset), Query.orderDesc("$createdAt")]
         );
 
         if (documents.length === 0) {
