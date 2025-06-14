@@ -15,6 +15,7 @@ const appwriteDatabases = {
   confessions: process.env.APPWRITE_CONFESSIONS_COLLECTION_ID,
   comments: process.env.APPWRITE_COMMENTS_COLLECTION_ID,
   likes: process.env.APPWRITE_LIKES_COLLECTION_ID,
+  "children-comments": process.env.APPWRITE_CHILDREN_COMMENTS_COLLECTION_ID,
 };
 
 const client = new Client();

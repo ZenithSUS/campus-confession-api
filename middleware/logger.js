@@ -11,7 +11,9 @@ export function logger(req, res, next) {
     if (req.body && Object.keys(req.body).length > 0) {
       console.log(`Body: ${JSON.stringify(req.body)}`);
     }
-    console.log(`Middleware Status: ${res.statusCode < 400 ? "Success" : "Error"} \n`);
+    console.log(
+      `Middleware Status: ${res.statusCode < 400 ? "Success" : "Error"} \n`
+    );
   });
   next();
 }

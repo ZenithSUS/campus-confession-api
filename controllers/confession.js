@@ -19,6 +19,12 @@ export class ConfessionController extends Confession {
 
   async useGetConfessions(req, res) {
     try {
+      const filter = req.query.filter;
+      if (filter) {
+        const confession = await this.getConfessions(filter);
+        return res.status(200).json(confession);
+      }
+
       const confessions = await this.getConfessions();
       return res.status(200).json(confessions);
     } catch (error) {

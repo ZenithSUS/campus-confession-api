@@ -20,25 +20,46 @@ export class Confession {
   }
 
   // get confession
-  async getConfessions() {
+  async getConfessions(filter = null) {
     try {
       let allConfession = [];
       let offset = 0;
       const limit = 100;
 
-      while (true) {
-        const { documents } = await database.listDocuments(
-          appwriteDatabases.database,
-          appwriteDatabases.confessions,
-          [Query.limit(limit), Query.offset(offset)]
-        );
+      if (filter) {
+        while (true) {
+          const { documents } = await database.listDocuments(
+            appwriteDatabases.database,
+            appwriteDatabases.confessions,
+            [
+              Query.limit(limit),
+              Query.offset(offset),
+              Query.contains("campus", filter),
+            ]
+          );
 
-        if (documents.length === 0) {
-          break;
+          if (documents.length === 0) {
+            break;
+          }
+
+          allConfession = [...allConfession, ...documents];
+          offset += limit;
         }
+      } else {
+        while (true) {
+          const { documents } = await database.listDocuments(
+            appwriteDatabases.database,
+            appwriteDatabases.confessions,
+            [Query.limit(limit), Query.offset(offset)]
+          );
 
-        allConfession = [...allConfession, ...documents];
-        offset += limit;
+          if (documents.length === 0) {
+            break;
+          }
+
+          allConfession = [...allConfession, ...documents];
+          offset += limit;
+        }
       }
 
       const likes = new Like();
@@ -49,11 +70,12 @@ export class Confession {
 
       allConfession.map((confession) => {
         confession.likes =
-          allLikes.filter((like) => like.confessionId === confession.$id)
+          allLikes.filter((like) => like.confessionId.$id === confession.$id)
             .length || 0;
         confession.comments =
-          allComments.filter((comment) => comment.confession === confession.$id)
-            .length || 0;
+          allComments.filter(
+            (comment) => comment.confession.$id === confession.$id
+          ).length || 0;
       });
 
       return allConfession;
@@ -76,11 +98,11 @@ export class Confession {
 
       confession.likes =
         (await likes.getLikes()).filter(
-          (like) => like.confessionId === confession.$id
+          (like) => like.confessionId.$id === confession.$id
         ).length || 0;
       confession.comments =
         (await comments.getComments()).filter(
-          (comment) => comment.confession === confession.$id
+          (comment) => comment.confession.$id === confession.$id
         ).length || 0;
 
       return confession;
@@ -88,5 +110,4 @@ export class Confession {
       console.log(error);
     }
   }
-
 }

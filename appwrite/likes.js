@@ -46,13 +46,27 @@ export class Like {
   }
 
   // get like by id
-  async getLikeById(id) {
+  async getLikeById(confessionId = null, commentId = null) {
     try {
-      return await database.getDocument(
-        appwriteDatabases.database,
-        appwriteDatabases.likes,
-        id
-      );
+      if (confessionId) {
+        const { documents } = await database.listDocuments(
+          appwriteDatabases.database,
+          appwriteDatabases.likes,
+          [Query.equal("confessionId", confessionId)]
+        );
+        return documents;
+      }
+
+      if (commentId) {
+        const { documents } = await database.listDocuments(
+          appwriteDatabases.database,
+          appwriteDatabases.likes,
+          [Query.equal("commentId", commentId)]
+        );
+        return documents;
+      }
+
+      return [];
     } catch (error) {
       console.log(error);
     }

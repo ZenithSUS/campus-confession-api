@@ -1,5 +1,7 @@
 import { database, appwriteDatabases } from "./index.js";
 import { ID, Permission, Query, Role } from "node-appwrite";
+import { Like } from "./likes.js";
+import { ChildrenComments } from "./children-comments.js";
 
 export class Comment {
   async create(data) {
@@ -26,7 +28,11 @@ export class Comment {
         const { documents } = await database.listDocuments(
           appwriteDatabases.database,
           appwriteDatabases.comments,
-          [Query.limit(limit), Query.offset(offset), Query.orderDesc("$createdAt")]
+          [
+            Query.limit(limit),
+            Query.offset(offset),
+            Query.orderDesc("$createdAt"),
+          ]
         );
 
         if (documents.length === 0) {
@@ -45,11 +51,47 @@ export class Comment {
 
   async getCommentById(id) {
     try {
-      return await database.getDocument(
-        appwriteDatabases.database,
-        appwriteDatabases.comments,
+      let allComments = [];
+      let offset = 0;
+      const limit = 100;
+
+      while (true) {
+        const { documents } = await database.listDocuments(
+          appwriteDatabases.database,
+          appwriteDatabases.comments,
+          [
+            Query.limit(limit),
+            Query.offset(offset),
+            Query.orderDesc("$createdAt"),
+            Query.equal("confession", id),
+          ]
+        );
+
+        if (documents.length === 0) {
+          break;
+        }
+
+        allComments = [...allComments, ...documents];
+        offset += limit;
+      }
+
+      const likes = new Like();
+      const allLikes = await likes.getLikes();
+
+      const childrenComments = new ChildrenComments();
+      const allChildrenComments = await childrenComments.getAllChildrenComments(
         id
       );
+
+      allComments.map((comment) => {
+        comment.likes =
+          allLikes.filter((like) => like.commentId === comment.$id).length || 0;
+        comment.childComments =
+          allChildrenComments.filter(
+            (childrenComment) => childrenComment.comment === comment.$id
+          ).length || 0;
+      });
+      return allComments;
     } catch (error) {
       console.log(error);
     }
