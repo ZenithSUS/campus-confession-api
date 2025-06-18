@@ -69,10 +69,16 @@ export class Confession {
       const allComments = await comments.getComments();
 
       allConfession.map((confession) => {
-        confession.likes =
+        confession.likesData = allLikes.filter(
+          (like) => like.confessionId.$id === confession.$id
+        );
+        confession.commentsData = allComments.filter(
+          (comment) => comment.confession.$id === confession.$id
+        );
+        confession.likesLength =
           allLikes.filter((like) => like.confessionId.$id === confession.$id)
             .length || 0;
-        confession.comments =
+        confession.commentsLength =
           allComments.filter(
             (comment) => comment.confession.$id === confession.$id
           ).length || 0;
@@ -96,12 +102,20 @@ export class Confession {
       const likes = new Like();
       const comments = new Comment();
 
-      confession.likes =
-        (await likes.getLikes()).filter(
-          (like) => like.confessionId.$id === confession.$id
-        ).length || 0;
-      confession.comments =
-        (await comments.getComments()).filter(
+      const allLikes = await likes.getLikes();
+      const allComments = await comments.getComments();
+
+      confession.likesData = allLikes.filter(
+        (like) => like.confessionId.$id === confession.$id
+      );
+      confession.commentsData = allComments.filter(
+        (comment) => comment.confession.$id === confession.$id
+      );
+      confession.likesLength =
+        allLikes.filter((like) => like.confessionId.$id === confession.$id)
+          .length || 0;
+      confession.commentsLength =
+        allComments.filter(
           (comment) => comment.confession.$id === confession.$id
         ).length || 0;
 

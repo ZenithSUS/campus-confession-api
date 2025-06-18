@@ -10,7 +10,7 @@ export class Like {
         appwriteDatabases.likes,
         ID.unique(),
         data,
-        [Permission.read(Role.any()), Permission.write(Role.user(data.user))]
+        [Permission.read(Role.any()), Permission.write(Role.user(data.userId))]
       );
     } catch (error) {
       console.log(error);
