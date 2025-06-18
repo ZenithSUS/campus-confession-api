@@ -10,15 +10,26 @@ class CommentRouter {
 
   routes() {
     // POST Method
-    router.post("/", this.commentController.useCreateComment.bind(this.commentController));
+    router.post(
+      "/",
+      this.commentController.useCreateComment.bind(this.commentController)
+    );
 
     // GET Method
-    router.get("/", this.commentController.getComments.bind(this.commentController));
-    router.get("/:id", this.commentController.useGetCommentById.bind(this.commentController));
+    router.get(
+      "/",
+      this.commentController.getComments.bind(this.commentController)
+    );
+    router.get(
+      "/:id",
+      this.commentController.useGetCommentById.bind(this.commentController)
+    );
 
     // DELETE Method
-    router.delete("/:id", this.commentController.useDeleteComment.bind(this.commentController));
-
+    router.delete(
+      "/:id",
+      this.commentController.useDeleteComment.bind(this.commentController)
+    );
 
     return router;
   }

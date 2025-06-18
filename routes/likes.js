@@ -3,26 +3,41 @@ const router = express.Router();
 import { LikeController } from "../controllers/likes.js";
 
 class LikeRouter {
-    constructor() {
-        this.likeController = new LikeController();
-    }
+  constructor() {
+    this.likeController = new LikeController();
+  }
 
-    routes() {
-        // POST Method
-        router.post("/", this.likeController.useCreateLike.bind(this.likeController));
+  routes() {
+    // POST Method
+    router.post(
+      "/",
+      this.likeController.useCreateLike.bind(this.likeController)
+    );
 
-        // GET Method
-        router.get("/", this.likeController.useGetAllLikes.bind(this.likeController));
-        router.get("/:id", this.likeController.useGetLikeById.bind(this.likeController));
+    // GET Method
+    router.get(
+      "/",
+      this.likeController.useGetAllLikes.bind(this.likeController)
+    );
+    router.get(
+      "/:id",
+      this.likeController.useGetLikeById.bind(this.likeController)
+    );
 
-        // DELETE Method
-        router.delete("/:id", this.likeController.useDeleteLike.bind(this.likeController));
+    // DELETE Method
+    router.delete(
+      "/:id",
+      this.likeController.useDeleteLike.bind(this.likeController)
+    );
 
-        // UPDATE Method
-        router.put("/:id", this.likeController.useUpdateLike.bind(this.likeController));
+    // UPDATE Method
+    router.put(
+      "/:id",
+      this.likeController.useUpdateLike.bind(this.likeController)
+    );
 
-        return router;
-    }
+    return router;
+  }
 }
 
 export default new LikeRouter();
