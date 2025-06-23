@@ -68,23 +68,31 @@ export class Confession {
       const comments = new Comment();
       const allComments = await comments.getComments();
 
-      allConfession.map((confession) => {
-        confession.likesData = allLikes.filter(
-          (like) => like.confessionId.$id === confession.$id
+      const processedConfessions = allConfession.map((confession) => {
+        if (!confession?.$id) return confession;
+
+        const { likes, comments } = allLikes.concat(allComments).reduce(
+          (acc, item) => {
+            if (item.confessionId?.$id === confession.$id) {
+              acc.likes.push(item);
+            } else if (item.confession?.$id === confession.$id) {
+              acc.comments.push(item);
+            }
+            return acc;
+          },
+          { likes: [], comments: [] }
         );
-        confession.commentsData = allComments.filter(
-          (comment) => comment.confession.$id === confession.$id
-        );
-        confession.likesLength =
-          allLikes.filter((like) => like.confessionId.$id === confession.$id)
-            .length || 0;
-        confession.commentsLength =
-          allComments.filter(
-            (comment) => comment.confession.$id === confession.$id
-          ).length || 0;
+
+        return {
+          ...confession,
+          likesData: likes,
+          commentsData: comments,
+          likesLength: likes.length,
+          commentsLength: comments.length,
+        };
       });
 
-      return allConfession;
+      return processedConfessions;
     } catch (error) {
       console.log(error);
     }
@@ -93,35 +101,64 @@ export class Confession {
   // get confession by id
   async getConfessionById(id) {
     try {
+      // Validate input
+      if (!id) {
+        throw new Error("Confession ID is required");
+      }
+
       const confession = await database.getDocument(
         appwriteDatabases.database,
         appwriteDatabases.confessions,
         id
       );
 
+      if (!confession) {
+        throw new Error("Confession not found");
+      }
+
       const likes = new Like();
       const comments = new Comment();
 
-      const allLikes = await likes.getLikes();
-      const allComments = await comments.getComments();
+      // Get data with error handling
+      const [allLikes, allComments] = await Promise.all([
+        likes.getLikes().catch((err) => {
+          console.warn("Failed to get likes:", err);
+          return []; 
+        }),
+        comments.getComments().catch((err) => {
+          console.warn("Failed to get comments:", err);
+          return []; 
+        }),
+      ]);
 
-      confession.likesData = allLikes.filter(
-        (like) => like.confessionId.$id === confession.$id
-      );
-      confession.commentsData = allComments.filter(
-        (comment) => comment.confession.$id === confession.$id
-      );
-      confession.likesLength =
-        allLikes.filter((like) => like.confessionId.$id === confession.$id)
-          .length || 0;
-      confession.commentsLength =
-        allComments.filter(
-          (comment) => comment.confession.$id === confession.$id
-        ).length || 0;
+      const { likes: likesData, comments: commentsData } = allLikes
+        .concat(allComments)
+        .reduce(
+          (acc, item) => {
+            try {
+              if (item?.confessionId?.$id === confession.$id) {
+                acc.likes.push(item);
+              } else if (item?.confession?.$id === confession.$id) {
+                acc.comments.push(item);
+              }
+            } catch (itemError) {
+              console.warn("Error processing item:", item, itemError);
+            }
+            return acc;
+          },
+          { likes: [], comments: [] }
+        );
 
-      return confession;
+      return {
+        ...confession,
+        likesData,
+        commentsData,
+        likesLength: likesData.length,
+        commentsLength: commentsData.length,
+      };
     } catch (error) {
-      console.log(error);
+      console.error("Error in getConfessionById:", error);
+      throw error;
     }
   }
 }

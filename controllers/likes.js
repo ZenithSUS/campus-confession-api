@@ -23,10 +23,10 @@ export class LikeController extends Like {
   }
 
   // get like by id
-  async useGetLikeById(req, res) {
+  async useGetConfessionLikeById(req, res) {
     try {
-      const { confessionId, commentId } = req.body;
-      const like = await this.getLikeById(confessionId, commentId);
+      const { confessionId } = req.body;
+      const like = await this.getConfessionLikeById(confessionId);
       return res.status(200).json(like);
     } catch (error) {
       console.log(error);

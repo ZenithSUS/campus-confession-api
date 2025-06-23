@@ -20,8 +20,8 @@ class LikeRouter {
       this.likeController.useGetAllLikes.bind(this.likeController)
     );
     router.get(
-      "/:id",
-      this.likeController.useGetLikeById.bind(this.likeController)
+      "/confession/:id",
+      this.likeController.useGetConfessionLikeById.bind(this.likeController)
     );
 
     // DELETE Method

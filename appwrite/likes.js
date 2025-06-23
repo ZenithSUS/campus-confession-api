@@ -45,28 +45,30 @@ export class Like {
     }
   }
 
-  // get like by id
-  async getLikeById(confessionId = null, commentId = null) {
+  // get confession like by id
+  async getConfessionLikeById(confessionId) {
     try {
-      if (confessionId) {
-        const { documents } = await database.listDocuments(
-          appwriteDatabases.database,
-          appwriteDatabases.likes,
-          [Query.equal("confessionId", confessionId)]
-        );
-        return documents;
-      }
+      const { documents } = await database.listDocuments(
+        appwriteDatabases.database,
+        appwriteDatabases.likes,
+        [Query.equal("confessionId", confessionId)]
+      );
+      return documents;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-      if (commentId) {
-        const { documents } = await database.listDocuments(
-          appwriteDatabases.database,
-          appwriteDatabases.likes,
-          [Query.equal("commentId", commentId)]
-        );
-        return documents;
-      }
+  // get comment like by Id
+  async getCommentLikeById(commentId) {
+    try {
+      const { documents } = await database.listDocuments(
+        appwriteDatabases.database,
+        appwriteDatabases.likes,
+        [Query.equal("commentId", commentId)]
+      );
 
-      return [];
+      return documents;
     } catch (error) {
       console.log(error);
     }
