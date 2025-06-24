@@ -84,7 +84,7 @@ export class Comment {
           return [];
         }),
 
-        childrenComments.getAllChildrenComments(id).catch((err) => {
+        childrenComments.getAllChildrenComments().catch((err) => {
           console, warn("Failed to get replies:", err);
           return [];
         }),

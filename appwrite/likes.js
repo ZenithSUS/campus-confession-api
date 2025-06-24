@@ -74,6 +74,20 @@ export class Like {
     }
   }
 
+  async getChildrenCommentLikeById(commentId) {
+    try {
+      const { documents } = await database.listDocuments(
+        appwriteDatabases.database,
+        appwriteDatabases.likes,
+        [Query.equal("childrenCommentId", commentId)]
+      );
+
+      return documents;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   // delete like
   async delete(id) {
     try {
