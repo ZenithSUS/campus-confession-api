@@ -87,7 +87,6 @@ export class Confession {
           ...confession,
           likesData: likes,
           commentsData: comments,
-          likesLength: likes.length,
           commentsLength: comments.length,
         };
       });

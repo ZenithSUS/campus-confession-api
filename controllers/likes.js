@@ -22,11 +22,33 @@ export class LikeController extends Like {
     }
   }
 
-  // get like by id
+  // get confession like by id
   async useGetConfessionLikeById(req, res) {
     try {
       const { confessionId } = req.body;
       const like = await this.getConfessionLikeById(confessionId);
+      return res.status(200).json(like);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // get comment like by id
+  async useGetCommentLikeById(req, res) {
+    try {
+      const { commentId } = req.body;
+      const like = await this.getCommentLikeById(commentId);
+      return res.status(200).json(like);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // get children comment like by id
+  async useGetChildrenCommentLikeById(req, res) {
+    try {
+      const { commentId } = req.body;
+      const like = await this.getChildrenCommentLikeById(commentId);
       return res.status(200).json(like);
     } catch (error) {
       console.log(error);

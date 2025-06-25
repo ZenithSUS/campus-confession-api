@@ -24,6 +24,18 @@ class LikeRouter {
       this.likeController.useGetConfessionLikeById.bind(this.likeController)
     );
 
+    router.get(
+      "/comments/:id",
+      this.likeController.useGetCommentLikeById.bind(this.likeController)
+    );
+
+    router.get(
+      "/child-comments/:id",
+      this.likeController.useGetChildrenCommentLikeById.bind(
+        this.likeController
+      )
+    );
+
     // DELETE Method
     router.delete(
       "/:id",

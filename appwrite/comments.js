@@ -76,7 +76,6 @@ export class Comment {
             ...comment,
             likesData: likesData,
             repliesData: repliesData,
-            likesLength: likesData.length,
             repliesLength: repliesData.length
           }
       });
@@ -149,8 +148,6 @@ export class Comment {
           ...comments,
           likesData: likesData,
           repliesData: repliesData,
-          likesLength: likesData.length,
-          repliesLength: repliesData.length,
         };
       });
       return processedComments;
