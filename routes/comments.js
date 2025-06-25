@@ -18,7 +18,7 @@ class CommentRouter {
     // GET Method
     router.get(
       "/",
-      this.commentController.getComments.bind(this.commentController)
+      this.commentController.useGetComments.bind(this.commentController)
     );
     router.get(
       "/:id",
