@@ -60,6 +60,7 @@ export class ChildrenComments {
         return {
           ...comment,
           likesData: likesData,
+          likesLength: likesData.length,
         };
       });
 

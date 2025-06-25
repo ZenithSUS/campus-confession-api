@@ -25,7 +25,8 @@ export class LikeController extends Like {
   // get confession like by id
   async useGetConfessionLikeById(req, res) {
     try {
-      const { confessionId } = req.body;
+      const confessionId = req.params.id;
+
       const like = await this.getConfessionLikeById(confessionId);
       return res.status(200).json(like);
     } catch (error) {
@@ -36,7 +37,7 @@ export class LikeController extends Like {
   // get comment like by id
   async useGetCommentLikeById(req, res) {
     try {
-      const { commentId } = req.body;
+      const commentId = req.params.id;
       const like = await this.getCommentLikeById(commentId);
       return res.status(200).json(like);
     } catch (error) {
@@ -47,7 +48,7 @@ export class LikeController extends Like {
   // get children comment like by id
   async useGetChildrenCommentLikeById(req, res) {
     try {
-      const { commentId } = req.body;
+      const commentId = req.params.id;
       const like = await this.getChildrenCommentLikeById(commentId);
       return res.status(200).json(like);
     } catch (error) {
