@@ -1,7 +1,5 @@
 import { database, appwriteDatabases } from "./index.js";
 import { ID, Permission, Query, Role } from "node-appwrite";
-import { Like } from "./likes.js";
-import { ChildrenComments } from "./children-comments.js";
 
 export class Comment {
   async create(data) {
@@ -43,45 +41,7 @@ export class Comment {
         offset += limit;
       }
 
-      const likes = new Like();
-      const childrenComments = new ChildrenComments();
-
-      const [allLikes, allChildrenComments] = await Promise.all([
-        likes.getLikes().catch((err) => {
-          console.warn("Failed to get likes:", err);
-          return [];
-        }),
-
-        childrenComments.getAllChildrenComments().catch((err) => {
-          console.warn("Failed to get replies:", err);
-          return [];
-        }),
-      ]);
-
-      const processedComments = allComments.map((comment) => {
-        if (!comment.$id) return comment;
-
-        const { likes: likesData, replies: repliesData } = allLikes
-          .concat(allChildrenComments)
-          .reduce((acc, item) => {
-            if(item?.commentId?.$id === comment.$id) {
-              acc.likes.push(item);
-            } else if(item?.comment?.$id === comment.$id) {
-              acc.replies.push(item);
-            }
-            return acc;
-          }, { likes: [], replies: [] });
-
-          return {
-            ...comment,
-            likesData: likesData,
-            repliesData: repliesData,
-            likesLength: likesData.length,
-            repliesLength: repliesData.length
-          }
-      });
-
-      return processedComments;
+      return allComments;
     } catch (error) {
       console.log(error);
     }
@@ -113,47 +73,7 @@ export class Comment {
         offset += limit;
       }
 
-      const likes = new Like();
-      const childrenComments = new ChildrenComments();
-
-      const [allLikes, allChildrenComments] = await Promise.all([
-        likes.getLikes().catch((err) => {
-          console.warn("Failed to get likes:", err);
-          return [];
-        }),
-
-        childrenComments.getAllChildrenComments().catch((err) => {
-          console, warn("Failed to get replies:", err);
-          return [];
-        }),
-      ]);
-
-      const processedComments = allComments.map((comments) => {
-        if (!comments.$id) return comments;
-
-        const { likes: likesData, replies: repliesData } = allLikes
-          .concat(allChildrenComments)
-          .reduce(
-            (acc, item) => {
-              if (item?.commentId?.$id === comments.$id) {
-                acc.likes.push(item);
-              } else if (item?.comment?.$id === comments.$id) {
-                acc.replies.push(item);
-              }
-              return acc;
-            },
-            { likes: [], replies: [] }
-          );
-
-        return {
-          ...comments,
-          likesData: likesData,
-          repliesData: repliesData,
-          likesLength: likesData.length,
-          repliesLength: repliesData.length,
-        };
-      });
-      return processedComments;
+      return allComments;
     } catch (error) {
       console.log(error);
     }

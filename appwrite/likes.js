@@ -48,6 +48,10 @@ export class Like {
   // get confession like by id
   async getConfessionLikeById(confessionId) {
     try {
+      if(!confessionId) {
+        throw new Error("Confession ID is required");
+      }
+
       const { documents } = await database.listDocuments(
         appwriteDatabases.database,
         appwriteDatabases.likes,
@@ -62,6 +66,10 @@ export class Like {
   // get comment like by Id
   async getCommentLikeById(commentId) {
     try {
+      if(!commentId) {
+        throw new Error("Comment ID is required");
+      }
+      
       const { documents } = await database.listDocuments(
         appwriteDatabases.database,
         appwriteDatabases.likes,
@@ -104,6 +112,10 @@ export class Like {
   // update like
   async update(id) {
     try {
+      if(!id) {
+        throw new Error("Like ID is required");
+      }
+
       return await database.updateDocument(
         appwriteDatabases.database,
         appwriteDatabases.likes,

@@ -1,7 +1,5 @@
 import { database, appwriteDatabases } from "./index.js";
 import { ID, Permission, Query, Role } from "node-appwrite";
-import { Like } from "./likes.js";
-import { Comment } from "./comments.js";
 
 export class Confession {
   // create confession
@@ -62,37 +60,7 @@ export class Confession {
         }
       }
 
-      const likes = new Like();
-      const allLikes = await likes.getLikes();
-
-      const comments = new Comment();
-      const allComments = await comments.getComments();
-
-      const processedConfessions = allConfession.map((confession) => {
-        if (!confession?.$id) return confession;
-
-        const { likes, comments } = allLikes.concat(allComments).reduce(
-          (acc, item) => {
-            if (item.confessionId?.$id === confession.$id) {
-              acc.likes.push(item);
-            } else if (item.confession?.$id === confession.$id) {
-              acc.comments.push(item);
-            }
-            return acc;
-          },
-          { likes: [], comments: [] }
-        );
-
-        return {
-          ...confession,
-          likesData: likes,
-          commentsData: comments,
-          likesLength: likes.length,
-          commentsLength: comments.length,
-        };
-      });
-
-      return processedConfessions;
+      return allConfession;
     } catch (error) {
       console.log(error);
     }
@@ -116,46 +84,7 @@ export class Confession {
         throw new Error("Confession not found");
       }
 
-      const likes = new Like();
-      const comments = new Comment();
-
-      // Get data with error handling
-      const [allLikes, allComments] = await Promise.all([
-        likes.getLikes().catch((err) => {
-          console.warn("Failed to get likes:", err);
-          return []; 
-        }),
-        comments.getComments().catch((err) => {
-          console.warn("Failed to get comments:", err);
-          return []; 
-        }),
-      ]);
-
-      const { likes: likesData, comments: commentsData } = allLikes
-        .concat(allComments)
-        .reduce(
-          (acc, item) => {
-            try {
-              if (item?.confessionId?.$id === confession.$id) {
-                acc.likes.push(item);
-              } else if (item?.confession?.$id === confession.$id) {
-                acc.comments.push(item);
-              }
-            } catch (itemError) {
-              console.warn("Error processing item:", item, itemError);
-            }
-            return acc;
-          },
-          { likes: [], comments: [] }
-        );
-
-      return {
-        ...confession,
-        likesData,
-        commentsData,
-        likesLength: likesData.length,
-        commentsLength: commentsData.length,
-      };
+      return confession;
     } catch (error) {
       console.error("Error in getConfessionById:", error);
       throw error;

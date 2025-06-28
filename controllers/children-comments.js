@@ -1,9 +1,20 @@
 import { ChildrenComments } from "../appwrite/children-comments.js";
 
 export class ChildrenCommentController extends ChildrenComments {
+
   async useGetChildrenComments(req, res) {
     try {
-      const childrenComments = await this.getAllChildrenComments(
+      const childrenComments = await this.getAllChildrenComments();
+      return res.status(200).json(childrenComments);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+
+
+  async useGetChildrenCommentsById(req, res) {
+    try {
+      const childrenComments = await this.getAllChildrenCommentsById(
         req.params.id
       );
       return res.status(200).json(childrenComments);

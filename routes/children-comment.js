@@ -20,6 +20,13 @@ class ChildrenCommentRouter {
     // GET Method
     router.get(
       "/:id",
+      this.childrenCommentController.useGetChildrenCommentsById.bind(
+        this.childrenCommentController
+      )
+    );
+
+    router.get(
+      "/",
       this.childrenCommentController.useGetChildrenComments.bind(
         this.childrenCommentController
       )
