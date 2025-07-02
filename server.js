@@ -5,6 +5,8 @@ import { fileURLToPath } from "url";
 import { logger } from "./middleware/logger.js";
 import { notFound } from "./middleware/not-found.js";
 import { error } from "./middleware/error.js";
+import mistralRouter from "./routes/mistral.js";
+import userRouter from "./routes/users.js";
 import confessionRouter from "./routes/confession.js";
 import commentRouter from "./routes/comments.js";
 import likeRouter from "./routes/likes.js";
@@ -35,6 +37,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(logger);
 
 // routes
+app.use("/api/mistral", mistralRouter.routes());
+app.use("/api/users", userRouter.routes());
 app.use("/api/confessions", confessionRouter.routes());
 app.use("/api/comments", commentRouter.routes());
 app.use("/api/likes", likeRouter.routes());
@@ -44,6 +48,7 @@ app.use("/api/child-comments", childrenCommentRouter.routes());
 app.use(notFound);
 app.use(error);
 
+// Initialize Server
 app.listen(3030, () => {
   console.log("Server is running on port 3030");
 });
