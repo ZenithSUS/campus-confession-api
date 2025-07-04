@@ -26,6 +26,7 @@ export class ChildrenComments {
       return allChildrenComments;
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 
@@ -60,6 +61,7 @@ export class ChildrenComments {
       return allChildrenComments;
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 
@@ -74,6 +76,7 @@ export class ChildrenComments {
       );
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 }

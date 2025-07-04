@@ -13,6 +13,7 @@ export class Comment {
       );
     } catch (error) {
       console.log(error);
+        throw error;
     }
   }
 
@@ -44,6 +45,7 @@ export class Comment {
       return allComments;
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 
@@ -76,6 +78,7 @@ export class Comment {
       return allComments;
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 
@@ -88,6 +91,7 @@ export class Comment {
       );
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 }

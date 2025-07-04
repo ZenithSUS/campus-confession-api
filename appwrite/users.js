@@ -18,6 +18,7 @@ export class User {
       );
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 
@@ -34,6 +35,7 @@ export class User {
       );
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 
@@ -62,6 +64,7 @@ export class User {
       return allUsers;
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 }

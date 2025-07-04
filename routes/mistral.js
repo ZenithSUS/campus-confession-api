@@ -14,6 +14,11 @@ class MistralRoutes {
       "/refineConfession",
       this.mistralController.useRefineConfession.bind(this.mistralController)
     );
+
+    router.post(
+      "/generateComment",
+      this.mistralController.useGenerateComment.bind(this.mistralController)
+    );
     return router;
   }
 }

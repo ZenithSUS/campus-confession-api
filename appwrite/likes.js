@@ -14,6 +14,7 @@ export class Like {
       );
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 
@@ -42,6 +43,7 @@ export class Like {
       return allLikes;
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 
@@ -60,6 +62,7 @@ export class Like {
       return documents;
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 
@@ -79,6 +82,7 @@ export class Like {
       return documents;
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 
@@ -93,6 +97,7 @@ export class Like {
       return documents;
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 
@@ -106,6 +111,7 @@ export class Like {
       );
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 
@@ -123,6 +129,7 @@ export class Like {
       );
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 }
