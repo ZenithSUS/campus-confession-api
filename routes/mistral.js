@@ -19,6 +19,11 @@ class MistralRoutes {
       "/generateComment",
       this.mistralController.useGenerateComment.bind(this.mistralController)
     );
+
+    router.post(
+      "/generateTags",
+      this.mistralController.useGenerateTags.bind(this.mistralController)
+    );
     return router;
   }
 }

@@ -1,4 +1,4 @@
-import { ID, Query } from "node-appwrite";
+import { ID, Permission, Query, Role } from "node-appwrite";
 import { database, appwriteDatabases } from "./index.js";
 
 export class ChildrenComments {
@@ -72,7 +72,8 @@ export class ChildrenComments {
         appwriteDatabases.database,
         appwriteDatabases["children-comments"],
         ID.unique(),
-        data
+        data,
+        [Permission.read(Role.any()), Permission.write(Role.user(data.userId))]
       );
     } catch (error) {
       console.log(error);

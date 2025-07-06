@@ -10,7 +10,7 @@ import userRouter from "./routes/users.js";
 import confessionRouter from "./routes/confession.js";
 import commentRouter from "./routes/comments.js";
 import likeRouter from "./routes/likes.js";
-import childrenCommentRouter from "./routes/children-comment.js"
+import childrenCommentRouter from "./routes/children-comment.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

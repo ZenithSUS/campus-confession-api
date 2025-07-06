@@ -4,16 +4,24 @@ import { ID, Permission, Query, Role } from "node-appwrite";
 export class Comment {
   async create(data) {
     try {
+      if (!data && typeof data !== "object") {
+        throw new Error("Data is required!");
+      }
+
+      // Delete the userId from the data
+      const finaldata = { ...data };
+      delete finaldata.userId;
+
       return await database.createDocument(
         appwriteDatabases.database,
         appwriteDatabases.comments,
         ID.unique(),
-        data,
-        [Permission.read(Role.any()), Permission.write(Role.user(data.user))]
+        finaldata,
+        [Permission.read(Role.any()), Permission.write(Role.user(data.userId))]
       );
     } catch (error) {
       console.log(error);
-        throw error;
+      throw error;
     }
   }
 

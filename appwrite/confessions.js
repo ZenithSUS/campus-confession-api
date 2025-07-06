@@ -48,7 +48,11 @@ export class Confession {
           const { documents } = await database.listDocuments(
             appwriteDatabases.database,
             appwriteDatabases.confessions,
-            [Query.limit(limit), Query.offset(offset)]
+            [
+              Query.limit(limit),
+              Query.offset(offset),
+              Query.orderDesc("$createdAt"),
+            ]
           );
 
           if (documents.length === 0) {
@@ -71,7 +75,7 @@ export class Confession {
   async getConfessionById(id) {
     try {
       // Validate input
-      if (!id) {
+      if (!id && typeof id !== "string") {
         throw new Error("Confession ID is required");
       }
 

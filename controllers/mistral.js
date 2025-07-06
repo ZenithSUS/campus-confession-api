@@ -23,4 +23,14 @@ export class MistralController extends MistralAI {
       res.status(500).json({ message: error.message });
     }
   }
+
+  async useGenerateTags(req, res) {
+    try {
+      const { input } = req.body;
+      const generatedTags = await this.generateTags(input);
+      return res.status(200).json(generatedTags);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
 }
