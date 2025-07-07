@@ -2,6 +2,7 @@ import express from "express";
 const router = express.Router();
 
 import { ConfessionController } from "../controllers/confession.js";
+import { verifyAPIKey } from "../middleware/verify-key.js";
 
 class ConfessionRouter {
   constructor() {
@@ -20,6 +21,7 @@ class ConfessionRouter {
     // GET Method
     router.get(
       "/",
+      verifyAPIKey,
       this.confessionController.useGetConfessions.bind(
         this.confessionController
       )
