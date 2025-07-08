@@ -24,8 +24,21 @@ export const verifyAPIKey = (req, res, next) => {
   if (CLIENT_API_KEY !== API_KEY)
     return res.status(401).json({ message: "Unauthorized Access" });
 
+  const formattedDate = () => {
+    const date = new Date();
+    const year = date.getFullYear();
+
+    let month = date.getMonth() + 1;
+    month = month < 10 ? `0${month}` : month;
+
+    let day = date.getDate();
+    day = day < 10 ? `0${day}` : day;
+
+    return `${year}-${month}-${day}`;
+  }
+
   // Log Content
-  const logEntry = `Date Accessed: [${Date.now()}] | API Key Used: ${CLIENT_API_KEY.slice(
+  const logEntry = `Date Accessed: [${formattedDate()}] | API Key Used: ${CLIENT_API_KEY.slice(
     0,
     5
   )}**** | IP Address: ${req.ip} | Route: ${req.originalUrl} | Method: ${
