@@ -35,6 +35,19 @@ export class CommentController extends Comment {
     }
   }
 
+  async useGetCommentPagination(req, res) {
+    try {
+      const { offset, limit } = req.params;
+      if (!offset || !limit || isNaN(offset) || isNaN(limit))
+        return res.status(400).json({ message: "Unprocessable entity" });
+
+      const comment = await this.getCommentPagination(offset, limit);
+      return res.status(200).json(comment);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+
   async useDeleteComment(req, res) {
     try {
       const id = req.params.id;

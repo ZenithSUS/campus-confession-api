@@ -5,8 +5,10 @@ export class LikeController extends Like {
   async useCreateLike(req, res) {
     try {
       const data = req.body;
-      await this.create(data);
-      return res.status(201).json({ message: "Like created successfully" });
+      const like = await this.create(data);
+      return res
+        .status(201)
+        .json({ message: "Like created successfully", likesData: like });
     } catch (error) {
       console.log(error);
     }

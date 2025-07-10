@@ -23,6 +23,24 @@ export class ChildrenCommentController extends ChildrenComments {
     }
   }
 
+  async useGetChildrenCommentsByIdPagination(req, res) {
+    try {
+      const { id, offset, limit } = req.params;
+
+      if (!id || !offset || !limit || isNaN(offset) || isNaN(limit))
+        return res.status(400).json({ message: "Unprocessable Entity" });
+
+      const childrenComments = await this.getAllChildrenCommentsByIdPagination(
+        id,
+        offset,
+        limit
+      );
+      return res.status(200).json(childrenComments);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+
   async useCreateChildrenComment(req, res) {
     try {
       if (!req.body)

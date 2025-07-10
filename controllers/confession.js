@@ -45,6 +45,30 @@ export class ConfessionController extends Confession {
     }
   }
 
+  async useGetConfessionPagination(req, res) {
+    try {
+      const { page } = req.params;
+
+      if (!page || isNaN(page))
+        return res.status(400).json({ message: "Unprocessable entity" });
+
+      const confession = await this.getConfessionPagination(page);
+      return res.status(200).json(confession);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+
+  async useGetTop10Confessions(req, res) {
+    try {
+      console.log("top 10 confessions");
+      const confession = await this.getTop10ConfessionsByLikes();
+      return res.status(200).json(confession);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+
   async useDeleteConfession(req, res) {
     try {
       const id = req.params.id;

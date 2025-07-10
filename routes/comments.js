@@ -24,6 +24,12 @@ class CommentRouter {
       "/:id",
       this.commentController.useGetCommentById.bind(this.commentController)
     );
+    router.get(
+      "/pagination/:offset/:limit",
+      this.commentController.useGetCommentPagination.bind(
+        this.commentController
+      )
+    );
 
     // DELETE Method
     router.delete(

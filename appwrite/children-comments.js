@@ -65,6 +65,45 @@ export class ChildrenComments {
     }
   }
 
+  async getAllChildrenCommentsByIdPagination(commentId, offset, limit) {
+    try {
+      if (!commentId) {
+        throw new Error("Comment ID is required");
+      }
+
+      const { documents: childrenComments } = await database.listDocuments(
+        appwriteDatabases.database,
+        appwriteDatabases["children-comments"],
+        [
+          Query.limit(limit),
+          Query.offset(offset),
+          Query.equal("comment", commentId),
+        ]
+      );
+
+      const processedChildrenComments = Promise.all(
+        childrenComments.map(async (childrenComment) => {
+          const likes = await database.listDocuments(
+            appwriteDatabases.database,
+            appwriteDatabases.likes,
+            [Query.equal("childrenCommentId", childrenComment.$id)]
+          );
+
+          return {
+            ...childrenComment,
+            likesData: likes,
+            likesLength: likes.total,
+          };
+        })
+      );
+
+      return processedChildrenComments;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
   // Create Children Comment
   async createChildrenComment(data) {
     try {

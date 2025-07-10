@@ -2,8 +2,6 @@ import express from "express";
 const router = express.Router();
 
 import { ConfessionController } from "../controllers/confession.js";
-import { verifyAPIKey } from "../middleware/verify-key.js";
-
 class ConfessionRouter {
   constructor() {
     this.confessionController = new ConfessionController();
@@ -21,14 +19,25 @@ class ConfessionRouter {
     // GET Method
     router.get(
       "/",
-      verifyAPIKey,
       this.confessionController.useGetConfessions.bind(
+        this.confessionController
+      )
+    );
+    router.get(
+      "/top",
+      this.confessionController.useGetTop10Confessions.bind(
         this.confessionController
       )
     );
     router.get(
       "/:id",
       this.confessionController.useGetConfessionById.bind(
+        this.confessionController
+      )
+    );
+    router.get(
+      "/pagination/:page",
+      this.confessionController.useGetConfessionPagination.bind(
         this.confessionController
       )
     );
