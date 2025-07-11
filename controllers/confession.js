@@ -61,7 +61,6 @@ export class ConfessionController extends Confession {
 
   async useGetTop10Confessions(req, res) {
     try {
-      console.log("top 10 confessions");
       const confession = await this.getTop10ConfessionsByLikes();
       return res.status(200).json(confession);
     } catch (error) {

@@ -25,8 +25,14 @@ class CommentRouter {
       this.commentController.useGetCommentById.bind(this.commentController)
     );
     router.get(
-      "/pagination/:offset/:limit",
+      "/pagination/:page",
       this.commentController.useGetCommentPagination.bind(
+        this.commentController
+      )
+    );
+    router.get(
+      "/confession/:id/pagination/:page",
+      this.commentController.useGetCommentsByIdPagination.bind(
         this.commentController
       )
     );

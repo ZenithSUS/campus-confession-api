@@ -32,7 +32,7 @@ class ChildrenCommentRouter {
       )
     );
     router.get(
-      "/pagination/:id/:offset/:limit",
+      "/comment/:id/pagination/:page",
       this.childrenCommentController.useGetChildrenCommentsByIdPagination.bind(
         this.childrenCommentController
       )

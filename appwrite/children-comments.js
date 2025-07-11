@@ -65,11 +65,13 @@ export class ChildrenComments {
     }
   }
 
-  async getAllChildrenCommentsByIdPagination(commentId, offset, limit) {
+  async getAllChildrenCommentsByIdPagination(commentId, page) {
     try {
       if (!commentId) {
         throw new Error("Comment ID is required");
       }
+      const limit = 5;
+      const offset = (page - 1) * limit;
 
       const { documents: childrenComments } = await database.listDocuments(
         appwriteDatabases.database,
@@ -81,6 +83,8 @@ export class ChildrenComments {
         ]
       );
 
+      if (childrenComments.length === 0) return [];
+
       const processedChildrenComments = Promise.all(
         childrenComments.map(async (childrenComment) => {
           const likes = await database.listDocuments(
@@ -91,7 +95,7 @@ export class ChildrenComments {
 
           return {
             ...childrenComment,
-            likesData: likes,
+            likesData: likes.documents,
             likesLength: likes.total,
           };
         })

@@ -90,6 +90,24 @@ export class Confession {
         throw new Error("Confession not found");
       }
 
+      const comments = await database.listDocuments(
+        appwriteDatabases.database,
+        appwriteDatabases.comments,
+        [Query.equal("confession", confession.$id)]
+      );
+
+      const likes = await database.listDocuments(
+        appwriteDatabases.database,
+        appwriteDatabases.likes,
+        [Query.equal("confessionId", confession.$id)]
+      );
+
+      // Add comments and likes to confession
+      confession.commentsData = comments.documents;
+      confession.commentsLength = comments.total;
+      confession.likesData = likes.documents;
+      confession.likesLength = likes.total;
+
       return confession;
     } catch (error) {
       console.error("Error in getConfessionById:", error);
@@ -168,8 +186,7 @@ export class Confession {
       const top10 = Object.entries(countLikesInConfession)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 10)
-        .map(([confessionId, likesLength]) => (
-         { confessionId, likesLength }));
+        .map(([confessionId, likesLength]) => ({ confessionId, likesLength }));
 
       // Loop through top 10 and get confession
       const confessionPromises = top10.map(async (item) => {
@@ -190,7 +207,7 @@ export class Confession {
           appwriteDatabases.likes,
           [Query.equal("confessionId", confession.$id)]
         );
-    
+
         return {
           ...item,
           confession,
@@ -204,14 +221,16 @@ export class Confession {
       const top10WithConfessions = await Promise.all(confessionPromises);
 
       // Flatten the top10WithConfessions array
-      const flattenedTop10WithConfessions = top10WithConfessions.map((item) => ({
-        confessionId: item.confessionId,
-        likesLength: item.likesLength,
-        likesData: item.likesData,
-        commentsLength: item.commentsLength,
-        commentsData: item.commentsData,
-        ...item.confession,
-      }))
+      const flattenedTop10WithConfessions = top10WithConfessions.map(
+        (item) => ({
+          confessionId: item.confessionId,
+          likesLength: item.likesLength,
+          likesData: item.likesData,
+          commentsLength: item.commentsLength,
+          commentsData: item.commentsData,
+          ...item.confession,
+        })
+      );
 
       return flattenedTop10WithConfessions;
     } catch (error) {

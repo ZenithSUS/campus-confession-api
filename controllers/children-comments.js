@@ -1,7 +1,6 @@
 import { ChildrenComments } from "../appwrite/children-comments.js";
 
 export class ChildrenCommentController extends ChildrenComments {
-
   async useGetChildrenComments(req, res) {
     try {
       const childrenComments = await this.getAllChildrenComments();
@@ -10,7 +9,6 @@ export class ChildrenCommentController extends ChildrenComments {
       res.status(500).json({ message: error.message });
     }
   }
-
 
   async useGetChildrenCommentsById(req, res) {
     try {
@@ -25,15 +23,14 @@ export class ChildrenCommentController extends ChildrenComments {
 
   async useGetChildrenCommentsByIdPagination(req, res) {
     try {
-      const { id, offset, limit } = req.params;
+      const { id, page } = req.params;
 
-      if (!id || !offset || !limit || isNaN(offset) || isNaN(limit))
+      if (!id || !page || isNaN(page))
         return res.status(400).json({ message: "Unprocessable Entity" });
 
       const childrenComments = await this.getAllChildrenCommentsByIdPagination(
         id,
-        offset,
-        limit
+        page
       );
       return res.status(200).json(childrenComments);
     } catch (error) {

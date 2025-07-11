@@ -90,11 +90,13 @@ export class Comment {
     }
   }
 
-  async getCommentPagination(offset, limit) {
+  async getCommentPagination(page, limit = 10) {
     try {
-      if ((!offset, !limit)) {
-        throw new Error("Offset and limit are required");
+      if ((!page, !limit)) {
+        throw new Error("Page and limit are required");
       }
+
+      const offset = (page - 1) * 10;
 
       const { documents: comments } = await database.listDocuments(
         appwriteDatabases.database,
@@ -124,8 +126,62 @@ export class Comment {
             ...comment,
             likesData: likes.documents,
             repliesData: replies.documents,
-            likes: likes.total,
-            replies: replies.total,
+            likesLength: likes.total,
+            repliesLength: replies.total,
+          };
+        })
+      );
+
+      return processedComments;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async getCommentsByIdPagination(id, page, limit = 5) {
+    try {
+      if ((!id, !page, !limit)) {
+        throw new Error("Id, Page and limit are required");
+      }
+
+      const offset = (page - 1) * limit;
+
+      const { documents: comments } = await database.listDocuments(
+        appwriteDatabases.database,
+        appwriteDatabases.comments,
+        [
+          Query.offset(offset),
+          Query.limit(limit),
+          Query.orderDesc("$createdAt"),
+          Query.equal("confession", id),
+        ]
+      );
+
+      if (comments.length === 0) {
+        return [];
+      }
+
+      const processedComments = Promise.all(
+        comments.map(async (comment) => {
+          const likes = await database.listDocuments(
+            appwriteDatabases.database,
+            appwriteDatabases.likes,
+            [Query.equal("commentId", comment.$id)]
+          );
+
+          const replies = await database.listDocuments(
+            appwriteDatabases.database,
+            appwriteDatabases["children-comments"],
+            [Query.equal("comment", comment.$id)]
+          );
+
+          return {
+            ...comment,
+            likesData: likes.documents,
+            repliesData: replies.documents,
+            likesLength: likes.total,
+            repliesLength: replies.total,
           };
         })
       );

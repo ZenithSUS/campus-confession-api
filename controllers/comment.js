@@ -35,13 +35,27 @@ export class CommentController extends Comment {
     }
   }
 
+  async useGetCommentsByIdPagination(req, res) {
+    try {
+      const { id, page } = req.params;
+
+      if (!id || !page || isNaN(page))
+        return res.status(400).json({ message: "Unprocessable Entity" });
+
+      const comments = await this.getCommentsByIdPagination(id, page);
+      return res.status(200).json(comments);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+
   async useGetCommentPagination(req, res) {
     try {
-      const { offset, limit } = req.params;
-      if (!offset || !limit || isNaN(offset) || isNaN(limit))
+      const { page } = req.params;
+      if (!page || isNaN(page))
         return res.status(400).json({ message: "Unprocessable entity" });
 
-      const comment = await this.getCommentPagination(offset, limit);
+      const comment = await this.getCommentPagination(page);
       return res.status(200).json(comment);
     } catch (error) {
       res.status(500).json({ message: error.message });
