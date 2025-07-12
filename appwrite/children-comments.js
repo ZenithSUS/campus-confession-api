@@ -80,6 +80,7 @@ export class ChildrenComments {
           Query.limit(limit),
           Query.offset(offset),
           Query.equal("comment", commentId),
+          Query.orderDesc("$createdAt"),
         ]
       );
 
