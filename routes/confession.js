@@ -41,6 +41,12 @@ class ConfessionRouter {
         this.confessionController
       )
     );
+    router.get(
+      "/query/:query/page/:page",
+      this.confessionController.useGetConfessionByQuery.bind(
+        this.confessionController
+      )
+    );
 
     // DELETE Method
     router.delete(

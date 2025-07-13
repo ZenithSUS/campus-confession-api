@@ -115,6 +115,69 @@ export class Confession {
     }
   }
 
+  // Get Confession by Query Search
+  async getConfessionByQuery(query, page, limit = 5) {
+    try {
+      if ((!query, !page, !limit)) {
+        throw new Error("Query, Page and limit are required");
+      }
+
+      if (typeof query !== "string") {
+        throw new Error("Query must be a string");
+      }
+
+      const offset = (page - 1) * limit;
+
+      const { documents: confessions } = await database.listDocuments(
+        appwriteDatabases.database,
+        appwriteDatabases.confessions,
+        [
+          Query.or([
+            Query.contains("campus", query),
+            Query.contains("text", query),
+            Query.contains("user", query),
+          ]),
+          Query.offset(offset),
+          Query.limit(limit),
+          Query.orderDesc("$createdAt"),
+        ]
+      );
+
+      if (confessions.length === 0) {
+        return [];
+      } 
+
+      const processedConfessions = Promise.all(
+        confessions.map(async (confession) => {
+          const comments = await database.listDocuments(
+            appwriteDatabases.database,
+            appwriteDatabases.comments,
+            [Query.equal("confession", confession.$id)]
+          );
+
+          const likes = await database.listDocuments(
+            appwriteDatabases.database,
+            appwriteDatabases.likes,
+            [Query.equal("confessionId", confession.$id)]
+          );
+
+          return {
+            ...confession,
+            commentsData: comments.documents,
+            commentsLength: comments.total,
+            likesData: likes.documents,
+            likesLength: likes.total,
+          };
+        })
+      );
+
+      return processedConfessions;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
   // Get Confessions Pagination
   async getConfessionPagination(page, limit = 5) {
     try {
