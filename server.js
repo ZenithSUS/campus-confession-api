@@ -59,12 +59,12 @@ app.use(limiter);
 app.use(logger);
 
 // routes with protected routes
-app.use("/api/mistral", verifyAPIKey, mistralRouter.routes());
-app.use("/api/users", verifyAPIKey, userRouter.routes());
-app.use("/api/confessions", verifyAPIKey, confessionRouter.routes());
-app.use("/api/comments", verifyAPIKey, commentRouter.routes());
-app.use("/api/likes", verifyAPIKey, likeRouter.routes());
-app.use("/api/child-comments", verifyAPIKey, childrenCommentRouter.routes());
+app.use("/api/mistral", mistralRouter.routes());
+app.use("/api/users", userRouter.routes());
+app.use("/api/confessions", confessionRouter.routes());
+app.use("/api/comments", commentRouter.routes());
+app.use("/api/likes", likeRouter.routes());
+app.use("/api/child-comments", childrenCommentRouter.routes());
 
 // Error Handling Middleware
 app.use(notFound);
